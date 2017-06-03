@@ -54,8 +54,13 @@ int main() {
 					dx = -1;
 				else if (game.key.code == sf::Keyboard::Right)
 					dx = 1;
-
 		}
+
+		// move pieces
+		for (int i = 0; i < 4; ++i) {
+			a[i].x += dx;
+		}
+
 
 		int n = 6;
 		for (int i = 0; i < 4; ++i) {
