@@ -24,7 +24,21 @@ int shapes[7][4] = {
 	2, 3, 4, 5,	// Square shape
 };
 
+// make sure the pieces are within the playing board
+bool check_on_screen() {
+	for (int i = 0; i < 4; ++i) {
+		if (a[i].x < 0 || a[i].x >= N || a[i].y >= M)
+			return false;
+		else if (grid[a[i].y][a[i].x])
+			return false;
+	}
+	return true;
+}
+
 int main() {
+
+	srand(time(0));	// seed a random time to randomly populate tetris pieces when playing
+
 	// create the window for the tetris game
 	sf::RenderWindow window(sf::VideoMode(320, 480), "Welcome to Tetris!");
 
