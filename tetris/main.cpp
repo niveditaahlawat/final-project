@@ -34,11 +34,21 @@ int main() {
 	sf::Sprite sprite(texture);
 	sprite.setTextureRect(sf::IntRect(0, 0, 20, 20));
 
+	double timer = 0.0;
+	double delay = 0.2;
+
+	sf::Clock clock;
+
 	int dx = 0;	// set dx to 0 by default, before user rotates the piece
 	bool rotate = false;
 	int color_num = 1;
 
 	while (window.isOpen()) {
+		
+		double game_time = clock.getElapsedTime().asSeconds();
+		clock.restart();
+		timer += game_time;
+
 		sf::Event game;
 		while (window.pollEvent(game))
 		{
@@ -69,6 +79,14 @@ int main() {
 				int y = a[i].x - p.x;
 				a[i].x = p.x - x;
 				a[i].y = p.y + y;
+			}
+		}
+
+		// move the piece down with each iteration of the timer
+		if (timer > delay) {
+			for (int i = 0; i < 4; ++i) {
+				a[i].y += 1.0;
+				timer = 0.0;
 			}
 		}
 
