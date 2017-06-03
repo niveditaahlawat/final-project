@@ -27,7 +27,7 @@ int shapes[7][4] = {
 int main() {
 	// create the window for the tetris game
 	sf::RenderWindow window(sf::VideoMode(320, 480), "Welcome to Tetris!");
-	
+
 	sf::Texture texture;
 	texture.loadFromFile("tiles.png");
 
@@ -61,12 +61,28 @@ int main() {
 			a[i].x += dx;
 		}
 
-
-		int n = 6;
-		for (int i = 0; i < 4; ++i) {
-			a[i].x = shapes[n][i] % 2;
-			a[i].y = shapes[n][i] / 2;
+		// rotate pieces
+		if (rotate == true) {
+			Point p = a[1];	// point of rotation
+			for (int i = 0; i < 4; ++i) {
+				int x = a[i].y - p.y;
+				int y = a[i].x - p.x;
+				a[i].x = p.x - x;
+				a[i].y = p.y + y;
+			}
 		}
+
+		int n = 2;
+		if (a[0].x == 0) {
+			for (int i = 0; i < 4; ++i) {
+				a[i].x = shapes[n][i] % 2;
+				a[i].y = shapes[n][i] / 2;
+			}
+		}
+
+		// reset the orientation of the piece
+		dx = 0;
+		rotate = 0;
 
 		// clear the window when the window is opened
 		window.clear(sf::Color::Black);
