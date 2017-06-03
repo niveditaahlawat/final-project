@@ -301,3 +301,7 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+tetris/tetris.vcxproj
+tetris/tetris.vcxproj.filters
+tetris/tetris.vcxproj.filters
+*.vcxproj
