@@ -33,6 +33,11 @@ int main() {
 
 	sf::Sprite sprite(texture);
 	sprite.setTextureRect(sf::IntRect(0, 0, 20, 20));
+
+	int dx = 0;	// set dx to 0 by default, before user rotates the piece
+	bool rotate = false;
+	int color_num = 1;
+
 	while (window.isOpen()) {
 		sf::Event game;
 		while (window.pollEvent(game))
@@ -40,6 +45,16 @@ int main() {
 			// if the game is closed, close the window
 			if (game.type == sf::Event::Closed)
 				window.close();
+
+			// configure keyboard press signals
+			if (game.type == sf::Event::KeyPressed)
+				if (game.key.code == sf::Keyboard::Up)
+					rotate = true;
+				else if (game.key.code == sf::Keyboard::Left)
+					dx = -1;
+				else if (game.key.code == sf::Keyboard::Right)
+					dx = 1;
+
 		}
 
 		int n = 6;
