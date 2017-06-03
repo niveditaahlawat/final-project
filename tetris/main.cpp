@@ -42,7 +42,7 @@ int main() {
 				window.close();
 		}
 
-		int n = 0;
+		int n = 1;
 		for (int i = 0; i < 4; ++i) {
 			a[i].x = shapes[n][i] % 2;
 			a[i].y = shapes[n][i] / 2;
