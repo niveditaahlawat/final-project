@@ -83,6 +83,12 @@ int main() {
 		// move pieces
 		for (int i = 0; i < 4; ++i) {
 			a[i].x += dx;
+			b[i] = a[i];
+		}
+		if (!check_on_screen()) {
+			for (int i = 0; i < 4; ++i) {
+				a[i] = b[i];
+			}
 		}
 
 		// rotate pieces
@@ -94,21 +100,33 @@ int main() {
 				a[i].x = p.x - x;
 				a[i].y = p.y + y;
 			}
+			if (!check_on_screen()) {
+				for (int i = 0; i < 4; ++i) {
+					a[i] = b[i];
+				}
+			}
 		}
 
 		// move the piece down with each iteration of the timer
 		if (timer > delay) {
 			for (int i = 0; i < 4; ++i) {
 				a[i].y += 1.0;
-				timer = 0.0;
-			}
-		}
+				b[i] = a[i];
 
-		int n = 2;
-		if (a[0].x == 0) {
-			for (int i = 0; i < 4; ++i) {
-				a[i].x = shapes[n][i] % 2;
-				a[i].y = shapes[n][i] / 2;
+				// randomly populate a tetris piece
+				if (!check_on_screen()) {
+					for (int i = 0; i < 4; ++i) {
+						grid[b[i].y][b[i].x] = color_num;
+					}
+					color_num = 1 + rand() % 7;	// randomly choose one of the 7 colors from the tiles.png file
+					int n = rand() % 7;
+					for (int i = 0; i < 4; ++i) {
+						a[i].x = shapes[n][i] % 2;
+						a[i].y = shapes[n][i] / 2;
+					}
+				}
+
+				timer = 0.0;
 			}
 		}
 
@@ -116,8 +134,11 @@ int main() {
 		dx = 0;
 		rotate = 0;
 
+		// draw the tetris game
 		// clear the window when the window is opened
 		window.clear(sf::Color::Black);
+
+		
 
 		for (int i = 0; i < 4; ++i) {
 			sprite.setPosition(a[i].x * 18, a[i].y * 18);
