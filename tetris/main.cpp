@@ -138,10 +138,16 @@ int main() {
 		// clear the window when the window is opened
 		window.clear(sf::Color::Black);
 
-		
+		for (int i = 0; i < M; i++) {
+			for (int j = 0; j < N; j++) {
+				if (grid[i][j] == 0)
+					continue;
+				sprite.setPosition(j * 20, i * 20);
+			}
+		}
 
 		for (int i = 0; i < 4; ++i) {
-			sprite.setPosition(a[i].x * 18, a[i].y * 18);
+			sprite.setPosition(a[i].x * 20, a[i].y * 20);
 			window.draw(sprite);	// test the texture
 		}
 		window.display();
