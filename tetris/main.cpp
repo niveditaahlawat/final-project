@@ -57,6 +57,11 @@ int main() {
 	bool rotate = false;
 	int color_num = 1;
 
+	a[0].x = 0, a[0].y = 1;
+	a[1].x = 1, a[1].y = 1;
+	a[2].x = 1, a[2].y = 2;
+	a[3].x = 1, a[3].y = 3;
+
 	while (window.isOpen()) {
 
 		double game_time = clock.getElapsedTime().asSeconds();
@@ -132,6 +137,20 @@ int main() {
 
 			timer = 0.0;
 		}
+
+		// erase completed lines
+		int k = M - 1;
+		for (int i = M - 1; i > 0; --i) {
+			int line_count = 0;
+			for (int j = 0; j < N; ++j) {
+				if (grid[i][j])
+					line_count++;
+				grid[k][j] = grid[i][j];
+			}
+			if (line_count < N)
+				k--;
+		}
+
 
 		// reset the orientation of the piece
 		dx = 0;
