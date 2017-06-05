@@ -46,10 +46,10 @@ int main() {
 	texture.loadFromFile("tiles.png");
 
 	sf::Sprite sprite(texture);
-	sprite.setTextureRect(sf::IntRect(0, 0, 18, 18));
+	sprite.setTextureRect(sf::IntRect(0, 0, 20, 20));
 
 	double timer = 0.0;
-	double delay = 0.5;
+	double delay = 0.3;
 
 	sf::Clock clock;
 
@@ -80,6 +80,9 @@ int main() {
 					dx = 1;
 		}
 
+		// press down to drag piece to bottom of screen
+		if (game.key.code == sf::Keyboard::Down)
+			delay = 0.05;
 
 		// move pieces
 		for (int i = 0; i < 4; ++i) {
@@ -142,14 +145,16 @@ int main() {
 			for (int j = 0; j < N; ++j) {
 				if (grid[i][j] == 0)
 					continue;
-				sprite.setPosition(j * 18, i * 18);
+				sprite.setTextureRect(sf::IntRect(grid[i][j] * 20, 0, 20, 20));
+				sprite.setPosition(j * 20, i * 20);
 				window.draw(sprite);
 			}
 		}
 
 		
 		for (int i = 0; i < 4; ++i) {
-			sprite.setPosition(a[i].x * 18, a[i].y * 18);
+			sprite.setTextureRect(sf::IntRect(color_num * 20, 0, 20, 20));
+			sprite.setPosition(a[i].x * 20, a[i].y * 20);
 			window.draw(sprite);	// test the texture
 		}
 		
