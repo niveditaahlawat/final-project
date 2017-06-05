@@ -151,10 +151,12 @@ int main() {
 				k--;
 		}
 
-
 		// reset the orientation of the piece
 		dx = 0;
 		rotate = 0;
+
+		// reset the delay
+		delay = 0.3;
 
 		// draw the tetris game
 		// clear the window when the window is opened
