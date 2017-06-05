@@ -4,7 +4,7 @@
 const int M = 20;
 const int N = 10;
 
-int grid[M][N] = { 0 };
+int grid[M][N] = {0};
 
 class Point {
 public:
@@ -40,7 +40,7 @@ int main() {
 	srand(time(0));	// seed a random time to randomly populate tetris pieces when playing
 
 	// create the window for the tetris game
-	sf::RenderWindow window(sf::VideoMode(320, 480), "Welcome to Tetris!");
+	sf::RenderWindow window(sf::VideoMode(200, 400), "Welcome to Tetris!");
 
 	sf::Texture texture;
 	texture.loadFromFile("tiles.png");
@@ -48,14 +48,13 @@ int main() {
 	sf::Sprite sprite(texture);
 	sprite.setTextureRect(sf::IntRect(0, 0, 20, 20));
 
-	double timer = 0.0;
-	double delay = 0.3;
-
 	sf::Clock clock;
 
 	int dx = 0;	// set dx to 0 by default, before user rotates the piece
 	bool rotate = false;
 	int color_num = 1;
+	double timer = 0.0;
+	double delay = 0.3;
 
 	a[0].x = 0, a[0].y = 1;
 	a[1].x = 1, a[1].y = 1;
@@ -86,7 +85,7 @@ int main() {
 		}
 
 		// press down to drag piece to bottom of screen
-		if (game.key.code == sf::Keyboard::Down)
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 			delay = 0.05;
 
 		// move pieces
@@ -160,7 +159,7 @@ int main() {
 
 		// draw the tetris game
 		// clear the window when the window is opened
-		window.clear(sf::Color::Blue);
+		window.clear(sf::Color::Black);
 
 		for (int i = 0; i < M; ++i) {
 			for (int j = 0; j < N; ++j) {
