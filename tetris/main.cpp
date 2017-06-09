@@ -170,7 +170,6 @@ int main() {
 				window.draw(sprite);
 			}
 		}
-
 		
 		for (int i = 0; i < 4; ++i) {
 			sprite.setTextureRect(sf::IntRect(color_num * 20, 0, 20, 20));
@@ -178,10 +177,7 @@ int main() {
 			window.draw(sprite);	// test the texture
 		}
 		
-
-		//window.draw(sprite)
-		// display the window
-		window.display();
+		window.display();		// display the window
 	}
 	return 0;
 }
