@@ -50,6 +50,10 @@ int main() {
 
 	sf::Clock clock;
 
+	// output to screen
+	sf::Font raleway;
+	raleway.loadFromFile("raleway.tff");
+
 	int dx = 0;	// set dx to 0 by default, before user rotates the piece
 	bool rotate = false;
 	int color_num = 1;
@@ -156,6 +160,10 @@ int main() {
 
 		// reset the delay
 		delay = 0.3;
+
+		void print_score(int score) {
+
+		}
 
 		// draw the tetris game
 		// clear the window when the window is opened
