@@ -5,7 +5,7 @@
 const int M = 20;
 const int N = 10;
 
-int grid[M][N] = {0};
+int grid[M][N] = { 0 };
 
 class Point {
 public:
@@ -105,15 +105,15 @@ int main() {
 
 		// move pieces
 		[&]() {
-		for (int i = 0; i < 4; ++i) {
-			b[i] = a[i];
-			a[i].x += dx;
-		}
-		if (!check_on_screen()) {
 			for (int i = 0; i < 4; ++i) {
-				a[i] = b[i];
+				b[i] = a[i];
+				a[i].x += dx;
 			}
-		}
+			if (!check_on_screen()) {
+				for (int i = 0; i < 4; ++i) {
+					a[i] = b[i];
+				}
+			}
 		}();
 
 		// rotate pieces
@@ -166,12 +166,14 @@ int main() {
 				}
 				if (line_count == 5)
 					player_score++;
-				if (line_count < N) {// use a generic algorithm to figure out how many are occupied. use count with a predicate, which is specified by a lambda function.
+				if (line_count < N) {
 					k--;
-					std::cout << "Player score: " << player_score << std::endl;
 				}
 			}
 		}();
+		// could create a generic algorithm to figure out how many rows are occupied
+		// and use count with a predicate, which could be specified by a lambda function
+		// this, however, complicates the problem, but would implement 10C material
 
 		// reset the orientation of the piece
 		dx = 0;
