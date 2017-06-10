@@ -63,6 +63,7 @@ int main() {
 	score.setString(score_string);
 	score.setCharacterSize(30);
 	score.setFillColor(sf::Color::White);
+	window.draw(score);
 
 	int dx = 0;	// set dx to 0 by default, before user rotates the piece
 	bool rotate = false;
@@ -182,6 +183,7 @@ int main() {
 		// clear the window when the window is opened
 		window.clear(sf::Color::Black);
 
+		[&]() {
 		for (int i = 0; i < M; ++i) {
 			for (int j = 0; j < N; ++j) {
 				if (grid[i][j] == 0)
@@ -191,6 +193,7 @@ int main() {
 				window.draw(sprite);
 			}
 		}
+		}();
 		
 		for (int i = 0; i < 4; ++i) {
 			sprite.setTextureRect(sf::IntRect(color_num * 20, 0, 20, 20));
