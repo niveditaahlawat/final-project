@@ -51,8 +51,18 @@ int main() {
 	sf::Clock clock;
 
 	// output to screen
-	//sf::Font raleway;
-	//raleway.loadFromFile("raleway.tff");
+	std::string score_string = "Score: ";
+
+	// load the font
+	sf::Font raleway;
+	if (!raleway.loadFromFile("raleway.tff")) {}
+	
+	// draw text
+	sf::Text score;
+	score.setFont(raleway);
+	score.setString(score_string);
+	score.setCharacterSize(30);
+	score.setFillColor(sf::Color::White);
 
 	int dx = 0;	// set dx to 0 by default, before user rotates the piece
 	bool rotate = false;
