@@ -104,6 +104,7 @@ int main() {
 			delay = 0.05;
 
 		// move pieces
+		[&]() {
 		for (int i = 0; i < 4; ++i) {
 			b[i] = a[i];
 			a[i].x += dx;
@@ -113,6 +114,7 @@ int main() {
 				a[i] = b[i];
 			}
 		}
+		}();
 
 		// rotate pieces
 		if (rotate == true) {
@@ -171,7 +173,6 @@ int main() {
 			}
 		}();
 
-
 		// reset the orientation of the piece
 		dx = 0;
 		rotate = 0;
@@ -195,7 +196,6 @@ int main() {
 			}
 
 		}();
-
 
 		for (int i = 0; i < 4; ++i) {
 			sprite.setTextureRect(sf::IntRect(color_num * 20, 0, 20, 20));
