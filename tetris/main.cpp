@@ -50,6 +50,7 @@ int main() {
 
 	sf::Clock clock;
 
+	/*
 	// load the font
 	sf::Font font;
 	if (!font.loadFromFile("impact.tff")) {
@@ -62,6 +63,7 @@ int main() {
 	text.setCharacterSize(50);
 	text.setString("Lines cleared: ");
 	text.setPosition(50, 50);
+	*/
 
 	int dx = 0;	// set dx to 0 by default, before user rotates the piece
 	bool rotate = false;
@@ -149,7 +151,7 @@ int main() {
 
 			timer = 0.0;
 		}
-
+		int player_score = 0;
 		// erase completed lines
 		[&]() {
 			int k = M - 1;
@@ -160,10 +162,15 @@ int main() {
 						line_count++;
 					grid[k][j] = grid[i][j];
 				}
-				if (line_count < N)	// use a generic algorithm to figure out how many are occupied. use count with a predicate, which is specified by a lambda function.
+				if (line_count == 5)
+					player_score++;
+				if (line_count < N) {// use a generic algorithm to figure out how many are occupied. use count with a predicate, which is specified by a lambda function.
 					k--;
+					std::cout << "Player score: " << player_score << std::endl;
+				}
 			}
 		}();
+
 
 		// reset the orientation of the piece
 		dx = 0;
@@ -195,7 +202,7 @@ int main() {
 			sprite.setPosition(a[i].x * 20, a[i].y * 20);
 			window.draw(sprite);
 		}
-		window.draw(text);
+		//window.draw(text);
 		window.display();		// display the window
 	}
 	return 0;
