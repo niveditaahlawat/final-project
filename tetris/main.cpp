@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <iostream>
 #include <time.h>
 
 const int M = 20;
@@ -10,9 +11,7 @@ class Point {
 public:
 	int x;
 	int y;
-}
-a[4], b[4];
-
+} a[4], b[4];
 
 int shapes[7][4] = {
 	1, 3, 5, 7, // Line shape
@@ -25,6 +24,7 @@ int shapes[7][4] = {
 };
 
 // make sure the pieces are within the playing board
+
 bool check_on_screen() {
 	for (int i = 0; i < 4; ++i) {
 		if (a[i].x < 0 || a[i].x >= N || a[i].y >= M)
@@ -50,20 +50,18 @@ int main() {
 
 	sf::Clock clock;
 
-	// output to screen
-	std::string score_string = "Score: ";
-
 	// load the font
-	sf::Font raleway;
-	if (!raleway.loadFromFile("raleway.tff")) {}
-	
+	sf::Font font;
+	if (!font.loadFromFile("impact.tff")) {
+		std::cout << "Font file not found" << std::endl;
+	}
+
 	// draw text
-	sf::Text score;
-	score.setFont(raleway);
-	score.setString(score_string);
-	score.setCharacterSize(30);
-	score.setFillColor(sf::Color::White);
-	window.draw(score);
+	sf::Text text;
+	text.setFont(font);
+	text.setCharacterSize(50);
+	text.setString("Lines cleared: ");
+	text.setPosition(50, 50);
 
 	int dx = 0;	// set dx to 0 by default, before user rotates the piece
 	bool rotate = false;
@@ -153,7 +151,6 @@ int main() {
 		}
 
 		// erase completed lines
-
 		[&]() {
 			int k = M - 1;
 			for (int i = M - 1; i > 0; --i) {
@@ -175,32 +172,30 @@ int main() {
 		// reset the delay
 		delay = 0.3;
 
-		//void print_score(int score) {
-
-		//}
-
 		// draw the tetris game
 		// clear the window when the window is opened
 		window.clear(sf::Color::Black);
 
 		[&]() {
-		for (int i = 0; i < M; ++i) {
-			for (int j = 0; j < N; ++j) {
-				if (grid[i][j] == 0)
-					continue;
-				sprite.setTextureRect(sf::IntRect(grid[i][j] * 20, 0, 20, 20));
-				sprite.setPosition(j * 20, i * 20);
-				window.draw(sprite);
+			for (int i = 0; i < M; ++i) {
+				for (int j = 0; j < N; ++j) {
+					if (grid[i][j] == 0)
+						continue;
+					sprite.setTextureRect(sf::IntRect(grid[i][j] * 20, 0, 20, 20));
+					sprite.setPosition(j * 20, i * 20);
+					window.draw(sprite);
+				}
 			}
-		}
+
 		}();
-		
+
+
 		for (int i = 0; i < 4; ++i) {
 			sprite.setTextureRect(sf::IntRect(color_num * 20, 0, 20, 20));
 			sprite.setPosition(a[i].x * 20, a[i].y * 20);
-			window.draw(sprite);	// test the texture
+			window.draw(sprite);
 		}
-		
+		window.draw(text);
 		window.display();		// display the window
 	}
 	return 0;
