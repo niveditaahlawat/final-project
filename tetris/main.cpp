@@ -60,7 +60,7 @@ int main() {
 
 	// draw text
 	std::string output_start("______________________ \n LINES CLEARED: ");
-	std::string output_on("\n______ game on ______");
+	std::string output_on("\n____ PLAYING TETRIS ____");
 	std::string output_over("\n______ GAME OVER ______");
 
 	sf::Text text;
@@ -174,7 +174,7 @@ int main() {
 				}
 				if (line_count == N) {
 					num_lines++;
-					text.setString(output_start + std::to_string(lines) + output_on);
+					text.setString(output_start + std::to_string(num_lines) + output_on);
 				}
 			}
 		}();
@@ -210,7 +210,7 @@ int main() {
 		}();
 
 		for (int i = 0; i < 4; ++i) {
-			sprite.setTextureRect(sf::IntRect(color_num * 20, 0, 20, 20));
+			sprite.setTextureRect(sf::IntRect(color_num * 20, 20, 20, 20));
 			sprite.setPosition(a[i].x * 20, a[i].y * 20);
 			window.draw(sprite);
 		}
