@@ -5,7 +5,7 @@
 const int M = 20;
 const int N = 10;
 
-int grid[M][N] = { 0 };
+int grid[M][N] = { 0 };	// tetris board is empty
 
 class Point {
 public:
@@ -50,20 +50,16 @@ int main() {
 
 	sf::Clock clock;
 
-	/*
 	// load the font
 	sf::Font font;
-	if (!font.loadFromFile("impact.tff")) {
+	if (!font.loadFromFile("impact.ttf")) {
 		std::cout << "Font file not found" << std::endl;
 	}
 
 	// draw text
-	sf::Text text;
-	text.setFont(font);
-	text.setCharacterSize(50);
-	text.setString("Lines cleared: ");
-	text.setPosition(50, 50);
-	*/
+	sf::Text text("Lines cleared: ", font, 20);
+	text.setCharacterSize(32);
+	text.setPosition(window.getSize().x / 2 - text.getGlobalBounds().width / 2, window.getSize().y / 2 - text.getGlobalBounds().height / 2);
 
 	int dx = 0;	// set dx to 0 by default, before user rotates the piece
 	bool rotate = false;
@@ -98,7 +94,6 @@ int main() {
 				else if (game.key.code == sf::Keyboard::Right)
 					dx = 1;
 		}
-
 		// press down to drag piece to bottom of screen
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 			delay = 0.05;
@@ -153,24 +148,24 @@ int main() {
 
 			timer = 0.0;
 		}
-		int player_score = 0;
+
 		// erase completed lines
 		[&]() {
 			int k = M - 1;
 			for (int i = M - 1; i > 0; --i) {
-				int line_count = 0;// copy contents into a container
+				int line_count = 0;
 				for (int j = 0; j < N; ++j) {
-					if (grid[i][j])
+					if (grid[i][j]) {
 						line_count++;
+					}
 					grid[k][j] = grid[i][j];
 				}
-				if (line_count == 5)
-					player_score++;
 				if (line_count < N) {
 					k--;
 				}
 			}
 		}();
+
 		// could create a generic algorithm to figure out how many rows are occupied
 		// and use count with a predicate, which could be specified by a lambda function
 		// this, however, complicates the problem, but would implement 10C material
@@ -185,6 +180,8 @@ int main() {
 		// draw the tetris game
 		// clear the window when the window is opened
 		window.clear(sf::Color::Black);
+
+		window.draw(text);
 
 		[&]() {
 			for (int i = 0; i < M; ++i) {
