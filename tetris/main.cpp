@@ -87,25 +87,24 @@ int main() {
 
 	while (window.isOpen()) {
 
-		double game_time = clock.getElapsedTime().asSeconds();
+		timer += clock.getElapsedTime().asSeconds();
 		clock.restart();
-		timer += game_time;
 
 		sf::Event game;
-		while (window.pollEvent(game))
-		{
+		while (window.pollEvent(game)) {
 			// if the game is closed, close the window
 			if (game.type == sf::Event::Closed)
 				window.close();
 
 			// configure keyboard press signals
-			if (game.type == sf::Event::KeyPressed)
+			if (game.type == sf::Event::KeyPressed) {
 				if (game.key.code == sf::Keyboard::Up)
 					rotate = true;
 				else if (game.key.code == sf::Keyboard::Left)
 					dx = -1;
 				else if (game.key.code == sf::Keyboard::Right)
 					dx = 1;
+			}
 		}
 		// press down to drag piece to bottom of screen
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
@@ -114,12 +113,12 @@ int main() {
 		// move pieces
 		[&]() {
 			for (int i = 0; i < 4; ++i) {
-				b[i] = a[i];
+				b[i] = a[i];	// make a copy of the original piece here for future use (ex: checking valid transformations)
 				a[i].x += dx;
 			}
 			if (!check_on_screen()) {
 				for (int i = 0; i < 4; ++i) {
-					a[i] = b[i];
+					a[i] = b[i];	// if illegal transformation, restore the backup copy (Piece b)
 				}
 			}
 		}();
@@ -133,6 +132,7 @@ int main() {
 				a[i].x = p.x - x;
 				a[i].y = p.y + y;
 			}
+			// again, check for valid transformation. if not valid, restore Piece b
 			if (!check_on_screen()) {
 				for (int i = 0; i < 4; ++i) {
 					a[i] = b[i];
@@ -150,6 +150,7 @@ int main() {
 			// randomly populate a tetris piece
 			if (!check_on_screen()) {
 				for (int i = 0; i < 4; ++i) {
+					// freeze the colors of the grid with the color of the piece
 					grid[b[i].y][b[i].x] = color_num;
 				}
 				color_num = rand() % 7 + 1;	// randomly choose one of the 7 colors from the tiles.png file
@@ -157,6 +158,7 @@ int main() {
 				for (int i = 0; i < 4; ++i) {
 					a[i].x = shapes[n][i] % 2;
 					a[i].y = shapes[n][i] / 2;
+					a[i].x += N / 2 - 1;	// center all new pieces
 				}
 			}
 			timer = 0.0;
