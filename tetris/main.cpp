@@ -65,8 +65,9 @@ int main() {
 
 	sf::Text text;
 	text.setString(output_start + std::to_string(num_lines) + output_on);
-	text.setCharacterSize(32);
-	text.setPosition(window.getSize().x / 2 - text.getGlobalBounds().width / 2, window.getSize().y / 2 - text.getGlobalBounds().height / 2);
+	text.setFont(font);
+	text.setCharacterSize(16);
+	text.setPosition(window.getSize().x / 2 - text.getGlobalBounds().width / 2, window.getSize().y - 40 - text.getGlobalBounds().height / 2);
 
 	int dx = 0;	// set dx to 0 by default, before user rotates the piece
 	bool rotate = false;
@@ -141,20 +142,20 @@ int main() {
 				b[i] = a[i];
 				a[i].y += 1.0;
 			}
-			timer = 0.0;
-		}
 
-		// randomly populate a tetris piece
-		if (!check_on_screen()) {
-			for (int i = 0; i < 4; ++i) {
-				grid[b[i].y][b[i].x] = color_num;
+			// randomly populate a tetris piece
+			if (!check_on_screen()) {
+				for (int i = 0; i < 4; ++i) {
+					grid[b[i].y][b[i].x] = color_num;
+				}
+				color_num = rand() % 7 + 1;	// randomly choose one of the 7 colors from the tiles.png file
+				int n = rand() % 7;
+				for (int i = 0; i < 4; ++i) {
+					a[i].x = shapes[n][i] % 2;
+					a[i].y = shapes[n][i] / 2;
+				}
 			}
-			color_num = rand() % 7 + 1;	// randomly choose one of the 7 colors from the tiles.png file
-			int n = rand() % 7;
-			for (int i = 0; i < 4; ++i) {
-				a[i].x = shapes[n][i] % 2;
-				a[i].y = shapes[n][i] / 2;
-			}
+			timer = 0.0;
 		}
 
 		// erase completed lines
@@ -170,6 +171,10 @@ int main() {
 				}
 				if (line_count < N) {
 					k--;
+				}
+				if (line_count == N) {
+					num_lines++;
+					text.setString(output_start + std::to_string(lines) + output_on);
 				}
 			}
 		}();
@@ -209,6 +214,10 @@ int main() {
 			sprite.setPosition(a[i].x * 20, a[i].y * 20);
 			window.draw(sprite);
 		}
+		if (!check_on_screen()) {
+			text.setString(output_start + std::to_string(num_lines) + output_over);
+		}
+
 		window.display();		// display the window
 	}
 	return 0;
