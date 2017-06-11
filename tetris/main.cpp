@@ -40,7 +40,7 @@ int main() {
 	srand(time(0));	// seed a random time to randomly populate tetris pieces when playing
 
 	// create the window for the tetris game
-	sf::RenderWindow window(sf::VideoMode(200, 400), "Welcome to Tetris!");
+	sf::RenderWindow window(sf::VideoMode(200, 450), "Welcome to Tetris!");
 
 	sf::Texture texture;
 	texture.loadFromFile("tiles.png");
@@ -56,8 +56,10 @@ int main() {
 		std::cout << "Font file not found" << std::endl;
 	}
 
+	int num_lines = 0;
+
 	// draw text
-	sf::Text text("Lines cleared: ", font, 20);
+	sf::Text text("Lines cleared: ", font, 11);
 	text.setCharacterSize(32);
 	text.setPosition(window.getSize().x / 2 - text.getGlobalBounds().width / 2, window.getSize().y / 2 - text.getGlobalBounds().height / 2);
 
@@ -134,20 +136,20 @@ int main() {
 				b[i] = a[i];
 				a[i].y += 1.0;
 			}
-			// randomly populate a tetris piece
-			if (!check_on_screen()) {
-				for (int i = 0; i < 4; ++i) {
-					grid[b[i].y][b[i].x] = color_num;
-				}
-				color_num = rand() % 7 + 1;	// randomly choose one of the 7 colors from the tiles.png file
-				int n = rand() % 7;
-				for (int i = 0; i < 4; ++i) {
-					a[i].x = shapes[n][i] % 2;
-					a[i].y = shapes[n][i] / 2;
-				}
-			}
-
 			timer = 0.0;
+		}
+
+		// randomly populate a tetris piece
+		if (!check_on_screen()) {
+			for (int i = 0; i < 4; ++i) {
+				grid[b[i].y][b[i].x] = color_num;
+			}
+			color_num = rand() % 7 + 1;	// randomly choose one of the 7 colors from the tiles.png file
+			int n = rand() % 7;
+			for (int i = 0; i < 4; ++i) {
+				a[i].x = shapes[n][i] % 2;
+				a[i].y = shapes[n][i] / 2;
+			}
 		}
 
 		// erase completed lines
@@ -202,7 +204,6 @@ int main() {
 			sprite.setPosition(a[i].x * 20, a[i].y * 20);
 			window.draw(sprite);
 		}
-		//window.draw(text);
 		window.display();		// display the window
 	}
 	return 0;
