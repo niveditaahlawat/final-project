@@ -160,6 +160,10 @@ int main() {
 					a[i].y = shapes[n][i] / 2;
 					a[i].x += N / 2 - 1;	// center all new pieces
 				}
+				// check for game over if a piece has been added but it is invalid (aka at top of screen)
+				if (!check_on_screen()) {
+					text.setString(output_start + std::to_string(num_lines) + output_over);
+				}
 			}
 			timer = 0.0;
 		}
@@ -168,17 +172,17 @@ int main() {
 		[&]() {
 			int k = M - 1;
 			for (int i = M - 1; i > 0; --i) {
-				int line_count = 0;
+				int col_count = 0;
 				for (int j = 0; j < N; ++j) {
 					if (grid[i][j]) {
-						line_count++;
+						col_count++;
 					}
 					grid[k][j] = grid[i][j];
 				}
-				if (line_count < N) {
+				if (col_count < N) {
 					k--;
 				}
-				if (line_count == N) {
+				if (col_count == N) {
 					num_lines++;
 					text.setString(output_start + std::to_string(num_lines) + output_on);
 				}
@@ -220,9 +224,7 @@ int main() {
 			sprite.setPosition(a[i].x * 20, a[i].y * 20);
 			window.draw(sprite);
 		}
-		if (!check_on_screen()) {
-			text.setString(output_start + std::to_string(num_lines) + output_over);
-		}
+		
 
 		window.display();		// display the window
 	}
