@@ -40,7 +40,7 @@ int main() {
 	srand(time(0));	// seed a random time to randomly populate tetris pieces when playing
 
 	// create the window for the tetris game
-	sf::RenderWindow window(sf::VideoMode(200, 450), "Welcome to Tetris!");
+	sf::RenderWindow window(sf::VideoMode(200, 450), "WELCOME TO TETRIS!");
 
 	sf::Texture texture;
 	texture.loadFromFile("tiles.png");
@@ -59,7 +59,12 @@ int main() {
 	int num_lines = 0;
 
 	// draw text
-	sf::Text text("Lines cleared: ", font, 11);
+	std::string output_start("______________________ \n LINES CLEARED: ");
+	std::string output_on("\n______ game on ______");
+	std::string output_over("\n______ GAME OVER ______");
+
+	sf::Text text;
+	text.setString(output_start + std::to_string(num_lines) + output_on);
 	text.setCharacterSize(32);
 	text.setPosition(window.getSize().x / 2 - text.getGlobalBounds().width / 2, window.getSize().y / 2 - text.getGlobalBounds().height / 2);
 
