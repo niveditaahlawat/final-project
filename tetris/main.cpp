@@ -6,12 +6,14 @@ const int M = 20;
 const int N = 10;
 
 int grid[M][N] = { 0 };	// tetris board is empty
+// M and N are the dimensions of the tetris board
 
-class Point {
+class Piece {
 public:
 	int x;
 	int y;
 } a[4], b[4];
+// Piece a and b are made up of 4 elements
 
 int shapes[7][4] = {
 	1, 3, 5, 7, // Line shape
@@ -24,7 +26,7 @@ int shapes[7][4] = {
 };
 
 // make sure the pieces are within the playing board
-
+// make sure pieces are not overlapping
 bool check_on_screen() {
 	for (int i = 0; i < 4; ++i) {
 		if (a[i].x < 0 || a[i].x >= N || a[i].y >= M)
@@ -75,10 +77,12 @@ int main() {
 	double timer = 0.0;
 	double delay = 0.3;
 
+	// initialize first tetris piece
 	int n = rand() % 7;
 	for (int i = 0; i < 4; ++i) {
 		a[i].x = shapes[n][i] % 2;
 		a[i].y = shapes[n][i] / 2;
+		a[i].x += N / 2 - 1;	// tetris piece falls from center of board
 	}
 
 	while (window.isOpen()) {
@@ -122,7 +126,7 @@ int main() {
 
 		// rotate pieces
 		if (rotate == true) {
-			Point p = a[1];	// point of rotation
+			Piece p = a[1];	// point of rotation
 			for (int i = 0; i < 4; ++i) {
 				int x = a[i].y - p.y;
 				int y = a[i].x - p.x;
