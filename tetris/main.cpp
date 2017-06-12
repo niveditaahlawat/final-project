@@ -12,8 +12,9 @@ class Piece {
 public:
 	int x;
 	int y;
-} a[4], b[4];
-// Piece a and b are made up of 4 elements
+} a[4], a_backup[4];
+// Piece a and a_backup are made up of 4 elements
+
 
 int shapes[7][4] = {
 	1, 3, 5, 7, // Line shape
@@ -36,7 +37,6 @@ bool check_on_screen() {
 	}
 	return true;
 }
-
 
 // restore_a function
 // create_piece function
@@ -127,12 +127,12 @@ int main() {
 		// move pieces
 		[&]() {
 			for (int i = 0; i < 4; ++i) {
-				b[i] = a[i];	// make a copy of the original piece here for future use (ex: checking valid transformations)
+				a_backup[i] = a[i];	// make a copy of the original piece here for future use (ex: checking valid transformations)
 				a[i].x += dx;
 			}
 			if (!check_on_screen()) {
 				for (int i = 0; i < 4; ++i) {
-					a[i] = b[i];	// if illegal transformation, restore the backup copy (Piece b)
+					a[i] = a_backup[i];	// if illegal transformation, restore the backup copy (Piece b)
 				}
 			}
 		}();
@@ -149,7 +149,7 @@ int main() {
 			// again, check for valid transformation. if not valid, restore Piece b
 			if (!check_on_screen()) {
 				for (int i = 0; i < 4; ++i) {
-					a[i] = b[i];
+					a[i] = a_backup[i];
 				}
 			}
 		}
@@ -157,7 +157,7 @@ int main() {
 		// move the piece down with each iteration of the timer
 		if (timer > delay) {
 			for (int i = 0; i < 4; ++i) {
-				b[i] = a[i];
+				a_backup[i] = a[i];
 				a[i].y += 1.0;
 			}
 
@@ -165,7 +165,7 @@ int main() {
 			if (!check_on_screen()) {
 				for (int i = 0; i < 4; ++i) {
 					// freeze the colors of the grid with the color of the piece
-					grid[b[i].y][b[i].x] = color_num;
+					grid[a_backup[i].y][a_backup[i].x] = color_num;
 				}
 				color_num = rand() % 7 + 1;	// randomly choose one of the 7 colors from the tiles.png file
 				int n = rand() % 7;
@@ -237,14 +237,15 @@ int main() {
 				sprite.setPosition(a[i].x * 20, a[i].y * 20);
 				window.draw(sprite);
 			}
-
 		}
 
 		if (!player_alive) {
 			window.draw(game_over_text);
 		}
+		else {
+			window.draw(text);
+		}
 
-		window.draw(text);
 		window.display();		// display the window
 	}
 	return 0;
