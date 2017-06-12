@@ -37,12 +37,16 @@ bool check_on_screen() {
 	return true;
 }
 
+
+// restore_a function
+// create_piece function
+
 int main() {
 
 	srand(time(0));	// seed a random time to randomly populate tetris pieces when playing
 
 	// create the window for the tetris game
-	sf::RenderWindow window(sf::VideoMode(200, 450), "WELCOME TO TETRIS!");
+	sf::RenderWindow window(sf::VideoMode(200, 450), "TETRIS!");
 
 	sf::Texture texture;
 	texture.loadFromFile("tiles.png");
@@ -59,6 +63,8 @@ int main() {
 	}
 
 	int num_lines = 0;
+
+	bool player_alive = true;
 
 	// draw text
 	std::string output_start("______________________ \n LINES CLEARED: ");
@@ -163,6 +169,7 @@ int main() {
 				// check for game over if a piece has been added but it is invalid (aka at top of screen)
 				if (!check_on_screen()) {
 					text.setString(output_start + std::to_string(num_lines) + output_over);
+					player_alive = false;
 				}
 			}
 			timer = 0.0;
@@ -177,7 +184,7 @@ int main() {
 					if (grid[i][j]) {
 						col_count++;
 					}
-					grid[k][j] = grid[i][j];
+					grid[k][j] = grid[i][j];	// overwrite previous line with new line
 				}
 				if (col_count < N) {
 					k--;
@@ -200,12 +207,12 @@ int main() {
 		// reset the delay
 		delay = 0.3;
 
-		// draw the tetris game
-		// clear the window when the window is opened
+		if (player_alive == true) {
+		// draw the tetris game window
 		window.clear(sf::Color::Black);
-
-		window.draw(text);
-
+		
+		
+		// draw the previous pieces
 		[&]() {
 			for (int i = 0; i < M; ++i) {
 				for (int j = 0; j < N; ++j) {
@@ -219,13 +226,17 @@ int main() {
 
 		}();
 
-		for (int i = 0; i < 4; ++i) {
-			sprite.setTextureRect(sf::IntRect(color_num * 20, 20, 20, 20));
-			sprite.setPosition(a[i].x * 20, a[i].y * 20);
-			window.draw(sprite);
-		}
 		
+			// draw current piece
+			for (int i = 0; i < 4; ++i) {
+				sprite.setTextureRect(sf::IntRect(color_num * 20, 0, 20, 20));
+				sprite.setPosition(a[i].x * 20, a[i].y * 20);
+				window.draw(sprite);
+			}
+		}
 
+
+		window.draw(text);
 		window.display();		// display the window
 	}
 	return 0;
