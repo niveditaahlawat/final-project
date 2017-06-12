@@ -67,15 +67,23 @@ int main() {
 	bool player_alive = true;
 
 	// draw text
-	std::string output_start("______________________ \n LINES CLEARED: ");
-	std::string output_on("\n____ PLAYING TETRIS ____");
-	std::string output_over("\n______ GAME OVER ______");
+
+	std::string output_start("______________________ \n\t\t\t LINES CLEARED: ");
+	std::string output_on("\n_____ PLAYING TETRIS _____");
 
 	sf::Text text;
 	text.setString(output_start + std::to_string(num_lines) + output_on);
 	text.setFont(font);
 	text.setCharacterSize(16);
 	text.setPosition(window.getSize().x / 2 - text.getGlobalBounds().width / 2, window.getSize().y - 40 - text.getGlobalBounds().height / 2);
+
+	std::string output_over("GAME OVER!");
+
+	sf::Text game_over_text;
+	game_over_text.setString(output_over);
+	game_over_text.setFont(font);
+	game_over_text.setCharacterSize(40);
+	game_over_text.setPosition(6, 100);
 
 	int dx = 0;	// set dx to 0 by default, before user rotates the piece
 	bool rotate = false;
@@ -168,7 +176,6 @@ int main() {
 				}
 				// check for game over if a piece has been added but it is invalid (aka at top of screen)
 				if (!check_on_screen()) {
-					text.setString(output_start + std::to_string(num_lines) + output_over);
 					player_alive = false;
 				}
 			}
@@ -207,34 +214,35 @@ int main() {
 		// reset the delay
 		delay = 0.3;
 
-		if (player_alive == true) {
-		// draw the tetris game window
-		window.clear(sf::Color::Black);
-		
-		
-		// draw the previous pieces
-		[&]() {
-			for (int i = 0; i < M; ++i) {
-				for (int j = 0; j < N; ++j) {
-					if (grid[i][j] == 0)
-						continue;
-					sprite.setTextureRect(sf::IntRect(grid[i][j] * 20, 0, 20, 20));
-					sprite.setPosition(j * 20, i * 20);
-					window.draw(sprite);
+		if (player_alive) {
+			// draw the tetris game window
+			window.clear(sf::Color::Black);
+
+			// draw the previous pieces
+			[&]() {
+				for (int i = 0; i < M; ++i) {
+					for (int j = 0; j < N; ++j) {
+						if (grid[i][j] == 0)
+							continue;
+						sprite.setTextureRect(sf::IntRect(grid[i][j] * 20, 0, 20, 20));
+						sprite.setPosition(j * 20, i * 20);
+						window.draw(sprite);
+					}
 				}
-			}
+			}();
 
-		}();
-
-		
 			// draw current piece
 			for (int i = 0; i < 4; ++i) {
 				sprite.setTextureRect(sf::IntRect(color_num * 20, 0, 20, 20));
 				sprite.setPosition(a[i].x * 20, a[i].y * 20);
 				window.draw(sprite);
 			}
+
 		}
 
+		if (!player_alive) {
+			window.draw(game_over_text);
+		}
 
 		window.draw(text);
 		window.display();		// display the window
