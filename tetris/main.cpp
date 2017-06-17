@@ -123,17 +123,16 @@ int main() {
 
 	int dx = 0;// set dx to 0 by default, before user rotates the piece
 	bool rotate = false;
-	int color_num = 1;
 	double timer = 0.0;
 	double delay = 0.3;
 
 	TetrisPiece *a, *a_backup;
+	// create first tetris piece
+	// create backup tetris piece
 	a_backup = new(TetrisPiece);
+	a = new(TetrisPiece);
 
 	while (window.isOpen()) {
-
-		// create first tetris piece
-		a = new(TetrisPiece);
 
 		timer += clock.getElapsedTime().asSeconds();
 		clock.restart();
@@ -160,7 +159,7 @@ int main() {
 
 		copy_piece(*a, *a_backup); // make a copy of the original piece here for future use (ex: checking valid transformations)
 
-		// move pieces
+								   // move pieces
 		[&]() {
 			for (int i = 0; i < 4; ++i) {
 				a->set_x(i, a->get_x(i) + dx);
@@ -193,17 +192,17 @@ int main() {
 
 		copy_piece(*a, *a_backup); // make a copy of the original piece here for future use (ex: checking valid transformations)
 
-		// move the piece down with each iteration of the timer
+								   // move the piece down with each iteration of the timer
 		if (timer > delay) {
 			for (int i = 0; i < 4; ++i) {
 				a->set_y(i, a->get_y(i) + 1.0);
 			}
 
-			// randomly populate a tetris piece
+
 			if (!check_on_screen(*a)) {
 				for (int i = 0; i < 4; ++i) {
 					// freeze the colors of the grid with the color of the piece
-					grid[a_backup->get_y(i)][a_backup->get_x(i)] = color_num;
+					grid[a_backup->get_y(i)][a_backup->get_x(i)] = a_backup->get_color();
 				}
 				delete a;
 				a = new(TetrisPiece);
@@ -267,7 +266,7 @@ int main() {
 
 			// draw current piece
 			for (int i = 0; i < 4; ++i) {
-				sprite.setTextureRect(sf::IntRect(color_num * 20, 0, 20, 20));
+				sprite.setTextureRect(sf::IntRect(a->get_color() * 20, 0, 20, 20));
 				sprite.setPosition(a->get_x(i) * 20, a->get_y(i) * 20);
 				window.draw(sprite);
 			}
@@ -282,5 +281,7 @@ int main() {
 
 		window.display();// display the window
 	}
+	delete a;
+	delete a_backup;
 	return 0;
 }
