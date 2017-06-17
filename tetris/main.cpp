@@ -31,13 +31,19 @@ public:
 	}
 
 	TetrisPiece(int unused) {	}
+	int get_x(int index) const {
+		return piece[index].x;
+	}
+	int get_y(int index) const {
+		return piece[index].y;
+	}
 private:
 	int color;
 	struct Block {
 		int x;
 		int y;
 	} piece[4];
-}a, a_backup;
+} a, a_backup;
 // create first tetris piece
 // create backup tetris piece
 
@@ -45,9 +51,9 @@ private:
 // make sure pieces are not overlapping
 bool check_on_screen() {
 	for (int i = 0; i < 4; ++i) {
-		if (a[i].x < 0 || a[i].x >= N || a[i].y >= M)
+		if (a.get_x(i) < 0 || a.get_x(i) >= N || a.get_y(i))
 			return false;
-		else if (grid[a[i].y][a[i].x])
+		else if (grid[a.get_y(i)][a.get_x(i)])
 			return false;
 	}
 	return true;
