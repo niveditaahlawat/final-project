@@ -37,9 +37,9 @@ private:
 		int x;
 		int y;
 	} piece[4];
-};
-
-
+}a, a_backup;
+// create first tetris piece
+// create backup tetris piece
 
 // make sure the pieces are within the playing board
 // make sure pieces are not overlapping
@@ -106,10 +106,7 @@ int main() {
 	double timer = 0.0;
 	double delay = 0.3;
 
-	// create first tetris piece
-	TetrisPiece a;
-	// create backup tetris piece
-	TetrisPiece a_backup;
+	
 	
 	while (window.isOpen()) {
 
