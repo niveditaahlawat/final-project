@@ -8,13 +8,17 @@ const int N = 10;
 int grid[M][N] = { 0 };	// tetris board is empty
 // M and N are the dimensions of the tetris board
 
-class Piece {
-public:
-	int x;
-	int y;
-} a[4], a_backup[4];
-// Piece a and a_backup are made up of 4 elements
 
+class TetrisPiece {
+public:
+private:
+	int color;
+	struct Piece {
+		int x;
+		int y;
+	} a[4], a_backup[4];
+	// Piece a and a_backup are made up of 4 elements
+};
 
 int shapes[7][4] = {
 	1, 3, 5, 7, // Line shape
