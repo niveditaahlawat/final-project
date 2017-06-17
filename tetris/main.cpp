@@ -5,47 +5,83 @@
 const int M = 20;
 const int N = 10;
 
-int grid[M][N] = { 0 };	// tetris board is empty
-// M and N are the dimensions of the tetris board
-
-class Piece {
-public:
-	int x;
-	int y;
-} a[4], b[4];
-// Piece a and b are made up of 4 elements
+int grid[M][N] = { 0 };// tetris board is empty
+					   // M and N are the dimensions of the tetris board
 
 int shapes[7][4] = {
 	1, 3, 5, 7, // Line shape
 	2, 4, 5, 7, // Z shape
-	3, 5, 4, 6,	// S shape
+	3, 5, 4, 6,// S shape
 	3, 5, 4, 7, // T shape
-	2, 3, 5, 7, // L shape	
-	3, 5, 7, 6,	// J shape
-	2, 3, 4, 5,	// Square shape
+	2, 3, 5, 7, // L shape
+	3, 5, 7, 6,// J shape
+	2, 3, 4, 5,// Square shape
+};
+
+class TetrisPiece {
+public:
+	TetrisPiece() {
+		int n = rand() % 7;
+		color = n + 1;// randomly choose one of the 7 colors from the tiles.png file
+		for (int i = 0; i < 4; ++i) {
+			piece[i].x = shapes[n][i] % 2;
+			piece[i].y = shapes[n][i] / 2;
+			piece[i].x += N / 2 - 1;// tetris piece falls from center of board
+		}
+	}
+	// Accessor functions
+	int get_x(int index) const {
+		return piece[index].x;
+	}
+	int get_y(int index) const {
+		return piece[index].y;
+	}
+	int get_color() const {
+		return color;
+	}
+	// Mutator functions
+	void set_x(int index, int x1) {
+		piece[index].x = x1;
+	}
+	void set_y(int index, int y1) {
+		piece[index].y = y1;
+	}
+	void set_color(int c) {
+		color = c;
+	}
+private:
+	int color;
+	struct Block {
+		int x;
+		int y;
+	} piece[4];
 };
 
 // make sure the pieces are within the playing board
 // make sure pieces are not overlapping
-bool check_on_screen() {
+bool check_on_screen(TetrisPiece const &a) {
 	for (int i = 0; i < 4; ++i) {
-		if (a[i].x < 0 || a[i].x >= N || a[i].y >= M)
+		if (a.get_x(i) < 0 || a.get_x(i) >= N || a.get_y(i) >= M)
 			return false;
-		else if (grid[a[i].y][a[i].x])
+		else if (grid[a.get_y(i)][a.get_x(i)])
 			return false;
 	}
 	return true;
 }
 
-
-// restore_a function
-// create_piece function
+void copy_piece(TetrisPiece const &a, TetrisPiece &a_backup) {
+	for (int i = 0; i < 4; ++i) {
+		a_backup.set_x(i, a.get_x(i));
+		a_backup.set_y(i, a.get_y(i));
+	}
+	a_backup.set_color(a.get_color());
+}
 
 int main() {
 
-	srand(time(0));	// seed a random time to randomly populate tetris pieces when playing
+	srand(time(0));// seed a random time to randomly populate tetris pieces when playing
 
-	// create the window for the tetris game
+				   // create the window for the tetris game
 	sf::RenderWindow window(sf::VideoMode(200, 450), "TETRIS!");
 
 	sf::Texture texture;
@@ -85,19 +121,16 @@ int main() {
 	game_over_text.setCharacterSize(40);
 	game_over_text.setPosition(6, 100);
 
-	int dx = 0;	// set dx to 0 by default, before user rotates the piece
+	int dx = 0;// set dx to 0 by default, before user rotates the piece
 	bool rotate = false;
-	int color_num = 1;
 	double timer = 0.0;
 	double delay = 0.3;
 
-	// initialize first tetris piece
-	int n = rand() % 7;
-	for (int i = 0; i < 4; ++i) {
-		a[i].x = shapes[n][i] % 2;
-		a[i].y = shapes[n][i] / 2;
-		a[i].x += N / 2 - 1;	// tetris piece falls from center of board
-	}
+	TetrisPiece *a, *a_backup;
+	// create first tetris piece
+	// create backup tetris piece
+	a_backup = new(TetrisPiece);
+	a = new(TetrisPiece);
 
 	while (window.isOpen()) {
 
@@ -124,59 +157,59 @@ int main() {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 			delay = 0.05;
 
-		// move pieces
+		copy_piece(*a, *a_backup); // make a copy of the original piece here for future use (ex: checking valid transformations)
+
+								   // move pieces
 		[&]() {
 			for (int i = 0; i < 4; ++i) {
-				b[i] = a[i];	// make a copy of the original piece here for future use (ex: checking valid transformations)
-				a[i].x += dx;
+				a->set_x(i, a->get_x(i) + dx);
 			}
-			if (!check_on_screen()) {
+			if (!check_on_screen(*a)) {
 				for (int i = 0; i < 4; ++i) {
-					a[i] = b[i];	// if illegal transformation, restore the backup copy (Piece b)
+					a->set_x(i, a_backup->get_x(i));// if illegal transformation, restore the backup copy (Piece b)
 				}
 			}
 		}();
 
 		// rotate pieces
 		if (rotate == true) {
-			Piece p = a[1];	// point of rotation
+			int x1 = a->get_x(1);
+			int y1 = a->get_y(1); // point of rotation
 			for (int i = 0; i < 4; ++i) {
-				int x = a[i].y - p.y;
-				int y = a[i].x - p.x;
-				a[i].x = p.x - x;
-				a[i].y = p.y + y;
+				int x = a->get_y(i) - y1;
+				int y = a->get_x(i) - x1;
+				a->set_x(i, x1 - x);
+				a->set_y(i, y1 + y);
 			}
 			// again, check for valid transformation. if not valid, restore Piece b
-			if (!check_on_screen()) {
+			if (!check_on_screen(*a)) {
 				for (int i = 0; i < 4; ++i) {
-					a[i] = b[i];
+					a->set_x(i, a_backup->get_x(i));// if illegal transformation, restore the backup copy (Piece b)
+					a->set_y(i, a_backup->get_y(i));// if illegal transformation, restore the backup copy (Piece b)
 				}
 			}
 		}
 
-		// move the piece down with each iteration of the timer
+		copy_piece(*a, *a_backup); // make a copy of the original piece here for future use (ex: checking valid transformations)
+
+								   // move the piece down with each iteration of the timer
 		if (timer > delay) {
 			for (int i = 0; i < 4; ++i) {
-				b[i] = a[i];
-				a[i].y += 1.0;
+				a->set_y(i, a->get_y(i) + 1.0);
 			}
 
-			// randomly populate a tetris piece
-			if (!check_on_screen()) {
+
+			if (!check_on_screen(*a)) {
 				for (int i = 0; i < 4; ++i) {
 					// freeze the colors of the grid with the color of the piece
-					grid[b[i].y][b[i].x] = color_num;
+					grid[a_backup->get_y(i)][a_backup->get_x(i)] = a_backup->get_color();
 				}
-				color_num = rand() % 7 + 1;	// randomly choose one of the 7 colors from the tiles.png file
-				int n = rand() % 7;
-				for (int i = 0; i < 4; ++i) {
-					a[i].x = shapes[n][i] % 2;
-					a[i].y = shapes[n][i] / 2;
-					a[i].x += N / 2 - 1;	// center all new pieces
-				}
+				delete a;
+				a = new(TetrisPiece);
 				// check for game over if a piece has been added but it is invalid (aka at top of screen)
-				if (!check_on_screen()) {
+				if (!check_on_screen(*a)) {
 					player_alive = false;
+
 				}
 			}
 			timer = 0.0;
@@ -191,7 +224,7 @@ int main() {
 					if (grid[i][j]) {
 						col_count++;
 					}
-					grid[k][j] = grid[i][j];	// overwrite previous line with new line
+					grid[k][j] = grid[i][j];// overwrite previous line with new line
 				}
 				if (col_count < N) {
 					k--;
@@ -233,19 +266,22 @@ int main() {
 
 			// draw current piece
 			for (int i = 0; i < 4; ++i) {
-				sprite.setTextureRect(sf::IntRect(color_num * 20, 0, 20, 20));
-				sprite.setPosition(a[i].x * 20, a[i].y * 20);
+				sprite.setTextureRect(sf::IntRect(a->get_color() * 20, 0, 20, 20));
+				sprite.setPosition(a->get_x(i) * 20, a->get_y(i) * 20);
 				window.draw(sprite);
 			}
-
 		}
 
 		if (!player_alive) {
 			window.draw(game_over_text);
 		}
+		else {
+			window.draw(text);
+		}
 
-		window.draw(text);
-		window.display();		// display the window
+		window.display();// display the window
 	}
+	delete a;
+	delete a_backup;
 	return 0;
 }
