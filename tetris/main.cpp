@@ -29,13 +29,19 @@ public:
 			piece[i].x += N / 2 - 1;	// tetris piece falls from center of board
 		}
 	}
-
-	TetrisPiece(int unused) {	}
+	// Accessor functions
 	int get_x(int index) const {
 		return piece[index].x;
 	}
 	int get_y(int index) const {
 		return piece[index].y;
+	}
+	// Mutator functions
+	int set_x(int index, int x1) {
+		piece[index].x = x1;
+	}
+	int set_y(int index, int y1) {
+		piece[index].y = y1;
 	}
 private:
 	int color;
@@ -59,8 +65,12 @@ bool check_on_screen() {
 	return true;
 }
 
-// restore_a function
-// create_piece function
+void copy_piece(TetrisPiece &a, TetrisPiece &a_backup) {
+	for (int i = 0; i < 4; ++i) {
+		a_backup.set_x(i, a.get_x(i));
+		a_backup.set_y(i, a.get_y(i));
+	}
+}
 
 int main() {
 
