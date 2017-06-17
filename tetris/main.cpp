@@ -36,6 +36,9 @@ public:
 	int get_y(int index) const {
 		return piece[index].y;
 	}
+	int get_color() const {
+		return color;
+	}
 	// Mutator functions
 	int set_x(int index, int x1) {
 		piece[index].x = x1;
@@ -43,19 +46,20 @@ public:
 	int set_y(int index, int y1) {
 		piece[index].y = y1;
 	}
+	int set_color(int c) {
+		color = c;
+	}
 private:
 	int color;
 	struct Block {
 		int x;
 		int y;
 	} piece[4];
-} a, a_backup;
-// create first tetris piece
-// create backup tetris piece
+};
 
 // make sure the pieces are within the playing board
 // make sure pieces are not overlapping
-bool check_on_screen() {
+bool check_on_screen(TetrisPiece const &a) {
 	for (int i = 0; i < 4; ++i) {
 		if (a.get_x(i) < 0 || a.get_x(i) >= N || a.get_y(i))
 			return false;
@@ -65,11 +69,12 @@ bool check_on_screen() {
 	return true;
 }
 
-void copy_piece(TetrisPiece &a, TetrisPiece &a_backup) {
+void copy_piece(TetrisPiece const &a, TetrisPiece &a_backup) {
 	for (int i = 0; i < 4; ++i) {
 		a_backup.set_x(i, a.get_x(i));
 		a_backup.set_y(i, a.get_y(i));
 	}
+	a_backup.set_color(a.get_color);
 }
 
 int main() {
@@ -122,9 +127,16 @@ int main() {
 	double timer = 0.0;
 	double delay = 0.3;
 
-	
+	TetrisPiece *a, *a_backup;
 	
 	while (window.isOpen()) {
+
+		a = new(TetrisPiece);
+		a_backup = new(TetrisPiece);
+
+		// create first tetris piece
+		// create backup tetris piece
+
 
 		timer += clock.getElapsedTime().asSeconds();
 		clock.restart();
