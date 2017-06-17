@@ -8,26 +8,6 @@ const int N = 10;
 int grid[M][N] = { 0 };	// tetris board is empty
 // M and N are the dimensions of the tetris board
 
-
-class TetrisPiece {
-public:
-	TetrisPiece() {
-		int n = rand() % 7;
-		for (int i = 0; i < 4; ++i) {
-			a[i].x = shapes[n][i] % 2;
-			a[i].y = shapes[n][i] / 2;
-			a[i].x += N / 2 - 1;	// tetris piece falls from center of board
-		}
-	}
-private:
-	int color;
-	struct Piece {
-		int x;
-		int y;
-	} a[4], a_backup[4];
-	// Piece a and a_backup are made up of 4 elements
-};
-
 int shapes[7][4] = {
 	1, 3, 5, 7, // Line shape
 	2, 4, 5, 7, // Z shape
@@ -37,6 +17,29 @@ int shapes[7][4] = {
 	3, 5, 7, 6,	// J shape
 	2, 3, 4, 5,	// Square shape
 };
+
+class TetrisPiece {
+public:
+	TetrisPiece() {
+		int n = rand() % 7;
+		color = n + 1;	// randomly choose one of the 7 colors from the tiles.png file
+		for (int i = 0; i < 4; ++i) {
+			piece[i].x = shapes[n][i] % 2;
+			piece[i].y = shapes[n][i] / 2;
+			piece[i].x += N / 2 - 1;	// tetris piece falls from center of board
+		}
+	}
+
+	TetrisPiece(int unused) {	}
+private:
+	int color;
+	struct Block {
+		int x;
+		int y;
+	} piece[4];
+};
+
+
 
 // make sure the pieces are within the playing board
 // make sure pieces are not overlapping
@@ -105,8 +108,9 @@ int main() {
 
 	// create first tetris piece
 	TetrisPiece a;
+	// create backup tetris piece
+	TetrisPiece a_backup;
 	
-
 	while (window.isOpen()) {
 
 		timer += clock.getElapsedTime().asSeconds();
@@ -134,6 +138,7 @@ int main() {
 
 		// move pieces
 		[&]() {
+			// replace this code with assignment operator
 			for (int i = 0; i < 4; ++i) {
 				a_backup[i] = a[i];	// make a copy of the original piece here for future use (ex: checking valid transformations)
 				a[i].x += dx;
