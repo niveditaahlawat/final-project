@@ -61,7 +61,7 @@ private:
 // make sure pieces are not overlapping
 bool check_on_screen(TetrisPiece const &a) {
 	for (int i = 0; i < 4; ++i) {
-		if (a.get_x(i) < 0 || a.get_x(i) >= N || a.get_y(i))
+		if (a.get_x(i) < 0 || a.get_x(i) >= N || a.get_y(i) >= M)
 			return false;
 		else if (grid[a.get_y(i)][a.get_x(i)])
 			return false;
@@ -132,11 +132,8 @@ int main() {
 
 	while (window.isOpen()) {
 
-		a = new(TetrisPiece);
-
 		// create first tetris piece
-		// create backup tetris piece
-
+		a = new(TetrisPiece);
 
 		timer += clock.getElapsedTime().asSeconds();
 		clock.restart();
@@ -163,7 +160,7 @@ int main() {
 
 		copy_piece(*a, *a_backup); // make a copy of the original piece here for future use (ex: checking valid transformations)
 
-								   // move pieces
+		// move pieces
 		[&]() {
 			for (int i = 0; i < 4; ++i) {
 				a->set_x(i, a->get_x(i) + dx);
@@ -196,7 +193,7 @@ int main() {
 
 		copy_piece(*a, *a_backup); // make a copy of the original piece here for future use (ex: checking valid transformations)
 
-								   // move the piece down with each iteration of the timer
+		// move the piece down with each iteration of the timer
 		if (timer > delay) {
 			for (int i = 0; i < 4; ++i) {
 				a->set_y(i, a->get_y(i) + 1.0);
