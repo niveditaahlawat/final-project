@@ -11,6 +11,14 @@ int grid[M][N] = { 0 };	// tetris board is empty
 
 class TetrisPiece {
 public:
+	TetrisPiece() {
+		int n = rand() % 7;
+		for (int i = 0; i < 4; ++i) {
+			a[i].x = shapes[n][i] % 2;
+			a[i].y = shapes[n][i] / 2;
+			a[i].x += N / 2 - 1;	// tetris piece falls from center of board
+		}
+	}
 private:
 	int color;
 	struct Piece {
@@ -95,13 +103,9 @@ int main() {
 	double timer = 0.0;
 	double delay = 0.3;
 
-	// initialize first tetris piece
-	int n = rand() % 7;
-	for (int i = 0; i < 4; ++i) {
-		a[i].x = shapes[n][i] % 2;
-		a[i].y = shapes[n][i] / 2;
-		a[i].x += N / 2 - 1;	// tetris piece falls from center of board
-	}
+	// create first tetris piece
+	TetrisPiece a;
+	
 
 	while (window.isOpen()) {
 
